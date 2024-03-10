@@ -2,6 +2,10 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const { query, validationResult } = require("express-validator");
+const bcrypt = require('bcryptjs');
+
+
+const JWT_SECRET = 'Amit is a good boy'
 
 router.use(express.json());
 
@@ -19,7 +23,7 @@ router.post(
     const result = validationResult(req);
     if (result.isEmpty()) {
       res.send({ errors: result.array() });
-      return; //This was thnecause of error
+      return; //This was the cause of error
     }
     // Check whether the user with this email exist already
     try {
@@ -29,13 +33,17 @@ router.post(
           .status(400)
           .json({ error: "Sorry the user with this email already exists" });
       }
+      // hashing using salting
+      const salt = await bcrypt.genSalt(10);
+      secPass = await bcrypt.hash(req.body.password, salt);
+      
       user = await User.create({
         name: req.body.name,
         email: req.body.email,
-        password: req.body.password,
+        password: secPass,
       });
       res.json(user);
-      
+
     } catch (error) {
       console.error(error.message);
       res.status(500).send("Some error occured");
