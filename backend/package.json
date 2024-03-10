@@ -1,0 +1,15 @@
+{
+  "name": "echovault-backend",
+  "version": "1.0.0",
+  "description": "echovalut - Your Notebook On The Cloud",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Amit Hegde",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.3",
+    "mongoose": "^8.2.1"
+  }
+}
