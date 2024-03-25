@@ -21,14 +21,14 @@ const NoteState = (props) => {
     });
 
     const json = await response.json();
-    console.log(json);
+    // console.log(json);
 
     setNotes(json);
   };
 
   // Add a note
   const addNote = async (title, description, tag) => {
-    console.log("Adding a new note");
+    // console.log("Adding a new note");
 
     // API Call
     const url = `${host}/api/notes/addnote`;
@@ -42,21 +42,11 @@ const NoteState = (props) => {
       body: JSON.stringify({ title, description, tag }),
     });
 
-    const json = response.json();
-    console.log(json);
-
-    const note = [
-      {
-        _id: "123",
-        user: "65eddf697ad7da411727a498",
-        title: title,
-        description: description,
-        tag: tag,
-        date: "2024-03-11T08:40:23.815Z",
-        __v: 0,
-      },
-    ];
+    const note = await response.json();
     setNotes(notes.concat(note));
+    // console.log(json);
+
+   
   };
 
   // Delete a Note
@@ -72,10 +62,10 @@ const NoteState = (props) => {
       },
     });
 
-    const json = response.json();
-    console.log(json);
+    // const json = response.json();
+    // console.log(json);
 
-    console.log("Deleeting the node with id: " + id);
+    // console.log("Deleeting the node with id: " + id);
     const newNotes = notes.filter((note) => {
       return note._id !== id;
     });
@@ -87,7 +77,7 @@ const NoteState = (props) => {
     // API Call
     const url = `${host}/api/notes/updatenote/${id}`;
     const response = await fetch(url, {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "auth-token":
@@ -96,17 +86,21 @@ const NoteState = (props) => {
       body: JSON.stringify({ title, description, tag }),
     });
 
-    const json = response.json();
+    const json = await response.json();
 
+    let newNotes = JSON.parse(JSON.stringify(notes))
     // Logic to edit in clinet
     for (let index = 0; index < notes.length; index++) {
       const element = notes[index];
       if (element._id === id) {
-        element.title = title;
-        element.description = description;
-        element.tag = tag;
+        newNotes[index].title = title;
+        newNotes[index].description = description;
+        newNotes[index].tag = tag;
+        break;
       }
+     
     }
+    setNotes(newNotes);
   };
   return (
     <NoteContext.Provider

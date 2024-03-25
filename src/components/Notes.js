@@ -2,29 +2,40 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import noteContext from "../context/notes/noteContext";
 import NoteItem from "./NoteItem";
 import AddNote from "./AddNote";
-import { useHref } from "react-router-dom";
+// import { useHref } from "react-router-dom";
 
 const Notes = () => {
   const context = useContext(noteContext);
-  const { notes, getNotes } = context;
+  const { notes, getNotes, editNote } = context;
+
   useEffect(() => {
     getNotes();
+    // eslint-disable-next-line
   }, []);
 
   const updateNote = (currentNote) => {
     ref.current.click();
     setNote({
+      id: currentNote._id,
       etitle: currentNote.title,
       edescription: currentNote.description,
       etag: currentNote.tag,
     });
   };
   const ref = useRef(null);
+  const refClose = useRef(null);
 
-  const [note, setNote] = useState({ etitle: "", edescription: "", etag: "" });
+  const [note, setNote] = useState({
+    id: "",
+    etitle: "",
+    edescription: "",
+    etag: "",
+  });
   const handleClick = (e) => {
     e.preventDefault();
-    console.log("Updating the note", note);
+    // console.log("Updating the note", note);
+    editNote(note.id, note.etitle, note.edescription, note.etag);
+    refClose.current.click();
   };
   const onChange = (e) => {
     e.preventDefault();
@@ -78,6 +89,8 @@ const Notes = () => {
                     aria-describedby="emailHelp"
                     onChange={onChange}
                     value={note.etitle}
+                    minLength={5}
+                    required
                   />
                 </div>
                 <div className="mb-3">
@@ -91,6 +104,8 @@ const Notes = () => {
                     name="edescription"
                     onChange={onChange}
                     value={note.edescription}
+                    minLength={5}
+                    required
                   />
                 </div>
                 {/* Tag element */}
@@ -111,6 +126,7 @@ const Notes = () => {
             </div>
             <div className="modal-footer">
               <button
+                ref={refClose}
                 type="button"
                 className="btn btn-secondary"
                 data-bs-dismiss="modal"
@@ -118,6 +134,7 @@ const Notes = () => {
                 Close
               </button>
               <button
+                disabled={note.etitle.length < 5 || note.edescription.length < 5}
                 type="button"
                 className="btn btn-primary"
                 onClick={handleClick}
@@ -130,6 +147,10 @@ const Notes = () => {
       </div>
       <div className="row my-3">
         <h2>Your Note</h2>
+        <div className="container mx-2">
+          {notes.length === 0 && "No notes to Display"}
+        </div>
+
         {notes.map((note) => {
           return (
             <NoteItem key={note._id} updateNote={updateNote} note={note} />
