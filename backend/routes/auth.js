@@ -75,6 +75,7 @@ router.post(
     query("password", "Password cannot be Blank").exists(),
   ],
   async (req, res) => {
+    let success = false;
     // If there are bad requests return the error and the message of error
     const error = validationResult(req);
     if (error.isEmpty()) {
@@ -95,9 +96,10 @@ router.post(
       // Compare the provided password with the hashed password stored in the database
       const passwordCompare = await bcrypt.compare(password, user.password);
       if (!passwordCompare) {
+        success = false;
         return res
           .status(400)
-          .json({ error: "Please try to login with correct credentials" });
+          .json({success, error: "Please try to login with correct credentials" });
       }
 
       // Generating JWT token for the authenticated user
@@ -108,8 +110,9 @@ router.post(
       };
       const authToken = jwt.sign(data, JWT_SECRET);
 
+      success = true;
       // Sending back the JWT token as response
-      res.json({ authToken });
+      res.json({ success,authToken });
     } catch (error) {
       console.error(error.message);
       res.status(500).send("Internal server error!");
