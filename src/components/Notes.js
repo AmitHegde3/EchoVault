@@ -2,14 +2,22 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import noteContext from "../context/notes/noteContext";
 import NoteItem from "./NoteItem";
 import AddNote from "./AddNote";
+import { useNavigate } from 'react-router-dom';
 // import { useHref } from "react-router-dom";
 
 const Notes = () => {
   const context = useContext(noteContext);
   const { notes, getNotes, editNote } = context;
+  let history = useNavigate();
 
   useEffect(() => {
-    getNotes();
+    // getNotes();
+    if (localStorage.getItem("token")) {
+      getNotes();
+    }
+    else {
+      history("/login")
+    }
     // eslint-disable-next-line
   }, []);
 
@@ -134,7 +142,9 @@ const Notes = () => {
                 Close
               </button>
               <button
-                disabled={note.etitle.length < 5 || note.edescription.length < 5}
+                disabled={
+                  note.etitle.length < 5 || note.edescription.length < 5
+                }
                 type="button"
                 className="btn btn-primary"
                 onClick={handleClick}

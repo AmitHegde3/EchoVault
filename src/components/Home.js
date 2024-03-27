@@ -4,9 +4,9 @@ import Notes from "./Notes";
 // import AddNote from "./AddNote";
 
 const Home = () => {
-  
   return (
-    <div> 
+    <div>
+      
       <Notes/>
     </div>
      

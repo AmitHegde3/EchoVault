@@ -20,11 +20,12 @@ router.post(
     query("password", "Enter a valid Password").isLength({ min: 5 }),
   ],
   async (req, res) => {
+    let success = false;
     // Validation result
     const result = validationResult(req);
     // If there are errors return bad request
     if (result.isEmpty()) {
-      res.send({ errors: result.array() });
+      res.send({ error,errors: result.array() });
       return; // Return from the function
     }
 
@@ -34,7 +35,7 @@ router.post(
       if (user) {
         return res
           .status(400)
-          .json({ error: "Sorry, the user with this email already exists" });
+          .json({success, error: "Sorry, the user with this email already exists" });
       }
 
       // Hashing the password using bcrypt for security
@@ -57,7 +58,8 @@ router.post(
       const authToken = jwt.sign(data, JWT_SECRET);
 
       // Sending back the JWT token as response
-      res.json({ authToken });
+      success = true;
+      res.json({success, authToken });
 
     } catch (error) {
       console.error(error.message);
