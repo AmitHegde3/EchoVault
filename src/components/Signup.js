@@ -42,6 +42,7 @@ const Signup = () => {
   };
   return (
     <div className="container">
+      <h2 className="my-2">Create an Account</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label for="name" className="form-label">

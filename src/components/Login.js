@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-    const [credentials, setCredentials] = useState({ email: "", password: "" });
-    let history = useNavigate();
+  const [credentials, setCredentials] = useState({ email: "", password: "" });
+  let history = useNavigate();
 
   const onChange = (e) => {
     e.preventDefault();
@@ -29,13 +28,14 @@ const Login = () => {
     if (json.success) {
       // Save the authtoken and redirect
       localStorage.setItem("token", json.authToken);
-        history("/")
+      history("/");
     } else {
       alert("Invalid");
     }
   };
   return (
     <div>
+      <h2 className="my-2">Login to Continue</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">
